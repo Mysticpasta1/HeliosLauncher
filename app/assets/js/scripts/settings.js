@@ -930,6 +930,7 @@ async function search(){
         }
     } else {
         searching = false
+        await reloadDropinMods()
     }
 }
 
@@ -1026,9 +1027,9 @@ document.addEventListener('keydown', async (e) => {
             if(searching == true){
                 saveShaderpackSettings()
             }
-        else {
-            await reloadDropinMods()
-            await resolveShaderpacksForUI()
+            else {
+                await reloadDropinMods()
+                await resolveShaderpacksForUI()
             } 
         }
     }
