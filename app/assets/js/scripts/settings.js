@@ -855,6 +855,8 @@ let CACHE_DROPIN_MODS
  * Resolve any located drop-in mods for this server and
  * populate the results onto the UI.
  */
+let dropinModsNames = []
+
 async function resolveDropinModsForUI(){
     const serv = (await DistroAPI.getDistribution()).getServerById(ConfigManager.getSelectedServer())
     CACHE_SETTINGS_MODS_DIR = path.join(ConfigManager.getInstanceDirectory(), serv.rawServer.id, 'mods')
@@ -863,6 +865,7 @@ async function resolveDropinModsForUI(){
     let dropinMods = ''
 
     for(dropin of CACHE_DROPIN_MODS){
+        dropinModsNames.push(dropin.fullName)
         dropinMods += `<div id="${dropin.fullName}" class="settingsBaseMod settingsDropinMod" ${!dropin.disabled ? 'enabled' : ''}>
                     <div class="settingsModContent">
                         <div class="settingsModMainWrapper">
@@ -884,6 +887,53 @@ async function resolveDropinModsForUI(){
 
     document.getElementById('settingsDropinModsContent').innerHTML = dropinMods
 }
+
+modFilter = document.getElementById('modFilter')
+
+mods = []
+async function search(){
+    query = modFilter.value.toUpperCase();
+    if(query != ''){
+        searching = true
+        
+        const distro = await DistroAPI.getDistribution()
+        const serv = distro.getServerById(ConfigManager.getSelectedServer())
+
+        reqMods = document.getElementById('settingsReqModsContent').innerHTML
+        optMods = document.getElementById('settingsOptModsContent').innerHTML
+
+        for(dropin of dropinModsNames){
+            mods.push({name: dropin, id: dropin})
+        }
+        for(const mdl of serv.modules){
+            if(mdl.rawModule.type === Type.ForgeMod || mdl.rawModule.type === Type.LiteMod || mdl.rawModule.type === Type.LiteLoader || mdl.rawModule.type === Type.FabricMod){
+                mods.push({name: mdl.rawModule.name, id: mdl.rawModule.id})
+            }
+        }
+        for (i = 0; i < mods.length; i++) {
+            a = mods[i]
+            id = a.id.split(':')
+            if (id.length > 1) {
+                id = String(id[0]) + ':' + String(id[1])
+            } else {
+                id = String(id[0])
+            }
+            modD = document.getElementById(id)
+            a = a.name.toUpperCase()
+            if (modD) {
+                if (a.indexOf(query) > -1) {
+                    modD.style.display = '';
+                } else {
+                    modD.style.display = 'none';
+                }
+            }
+        }
+    } else {
+        searching = false
+    }
+}
+
+modFilter.addEventListener("keyup", search);
 
 /**
  * Bind the remove button for each loaded drop-in mod.
@@ -968,12 +1018,18 @@ function saveDropinModConfiguration(){
 
 // Refresh the drop-in mods when F5 is pressed.
 // Only active on the mods tab.
+searching = false
+
 document.addEventListener('keydown', async (e) => {
     if(getCurrentView() === VIEWS.settings && selectedSettingsTab === 'settingsTabMods'){
         if(e.key === 'F5'){
+            if(searching == true){
+                saveShaderpackSettings()
+            }
+        else {
             await reloadDropinMods()
-            saveShaderpackSettings()
             await resolveShaderpacksForUI()
+            } 
         }
     }
 })
