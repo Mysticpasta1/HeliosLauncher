@@ -1,7 +1,6 @@
 appId: 'nfglauncher'
 productName: 'NFG Launcher'
 artifactName: '${productName}-setup-${version}.${ext}'
-
 copyright: 'Copyright © 2024 NFG Development'
 
 asar: true
