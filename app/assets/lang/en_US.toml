@@ -49,6 +49,7 @@ accountSelectConfirm = "Select"
 accountSelectCancel = "Cancel"
 
 [ejs.settings]
+modSearchBar = "What are you looking for?"
 navHeaderText = "Settings"
 navAccount = "Account"
 navMinecraft = "Minecraft"
