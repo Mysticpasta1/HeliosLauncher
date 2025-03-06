@@ -1,13 +1,13 @@
 {
-  "name": "helioslauncher",
-  "version": "2.1.1",
-  "productName": "Helios Launcher",
+  "name": "nfglauncher",
+  "version": "1.0.0",
+  "productName": "NFG Launcher",
   "description": "Modded Minecraft Launcher",
-  "author": "Daniel Scalzi (https://github.com/dscalzi/)",
+  "author": "NFG Development",
   "license": "UNLICENSED",
-  "homepage": "https://github.com/dscalzi/HeliosLauncher",
+  "homepage": "https://networkforgamers.com",
   "bugs": {
-    "url": "https://github.com/dscalzi/HeliosLauncher/issues"
+    "url": "https://pms.networkforgamers.com"
   },
   "private": true,
   "main": "index.js",
